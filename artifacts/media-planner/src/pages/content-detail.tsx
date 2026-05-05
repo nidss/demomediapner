@@ -145,13 +145,13 @@ export default function ContentDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <header className="bg-sidebar px-6 py-4 flex items-center gap-4">
-          <Link href="/"><button className="nm-raised-dark w-8 h-8 flex items-center justify-center rounded-xl text-sidebar-foreground"><RiArrowLeftLine className="text-base" /></button></Link>
-          <Skeleton className="h-6 w-48 rounded-xl" />
+        <header className="bg-sidebar border-b border-sidebar-border px-6 py-4 flex items-center gap-4">
+          <Link href="/"><button className="p-1.5 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground"><RiArrowLeftLine className="text-xl" /></button></Link>
+          <Skeleton className="h-6 w-48" />
         </header>
-        <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="flex flex-col gap-5">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 rounded-2xl" />)}</div>
-          <Skeleton className="h-96 rounded-3xl" />
+        <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="flex flex-col gap-4">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 rounded-xl" />)}</div>
+          <Skeleton className="h-96 rounded-2xl" />
         </div>
       </div>
     );
@@ -160,14 +160,10 @@ export default function ContentDetailPage() {
   if (!content) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="nm-raised bg-background rounded-3xl p-12 text-center">
-          <div className="text-5xl font-black text-primary/20 mb-3">404</div>
-          <p className="text-muted-foreground mb-5">Content not found.</p>
-          <Link href="/">
-            <button className="nm-raised-sm bg-background text-primary text-sm font-semibold px-5 py-2.5 rounded-xl hover:text-primary/80 transition-colors active:nm-inset">
-              Back to Calendar
-            </button>
-          </Link>
+        <div className="text-center">
+          <div className="text-4xl font-black text-primary/20 mb-3">404</div>
+          <p className="text-muted-foreground mb-4">Content not found.</p>
+          <Link href="/" className="text-primary text-sm font-medium hover:underline">Back to Calendar</Link>
         </div>
       </div>
     );
@@ -182,30 +178,29 @@ export default function ContentDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-background nm-raised relative z-10 px-6 py-4 flex items-center gap-3">
+      <header className="bg-sidebar border-b border-sidebar-border px-6 py-4 flex items-center gap-4">
         <Link href="/">
-          <button className="nm-raised w-9 h-9 flex items-center justify-center rounded-xl bg-background text-muted-foreground hover:text-primary transition-colors active:nm-inset flex-shrink-0">
-            <RiArrowLeftLine className="text-base" />
+          <button className="p-1.5 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground transition-colors">
+            <RiArrowLeftLine className="text-xl" />
           </button>
         </Link>
-        <h1 className="text-foreground font-bold text-lg flex-1 truncate tracking-tight">{content.title}</h1>
+        <h1 className="text-sidebar-foreground font-bold text-lg flex-1 truncate">{content.title}</h1>
         <div className="flex items-center gap-2">
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="nm-raised inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-background text-muted-foreground text-sm font-medium hover:text-primary transition-colors active:nm-inset"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sidebar-accent text-sidebar-accent-foreground text-sm font-medium hover:bg-sidebar-accent/80 transition-colors"
             >
-              <RiPencilLine className="text-sm" /> Edit
+              <RiPencilLine /> Edit
             </button>
           )}
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <button className="nm-raised inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-background text-destructive text-sm font-medium hover:opacity-80 transition-colors active:nm-inset">
-                <RiDeleteBinLine className="text-sm" /> Delete
+              <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-destructive/20 text-destructive text-sm font-medium hover:bg-destructive/30 transition-colors">
+                <RiDeleteBinLine /> Delete
               </button>
             </AlertDialogTrigger>
-            <AlertDialogContent className="bg-background border-0 nm-raised-lg rounded-3xl">
+            <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete content?</AlertDialogTitle>
                 <AlertDialogDescription>
@@ -213,8 +208,8 @@ export default function ContentDetailPage() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel className="nm-raised bg-background rounded-2xl border-0 hover:text-primary transition-all active:nm-inset">Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete} className="nm-raised bg-destructive text-destructive-foreground rounded-2xl border-0 hover:opacity-90 active:nm-inset">
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
                   Delete
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -223,24 +218,19 @@ export default function ContentDetailPage() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left column */}
+      <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {isEditing ? (
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
             {/* Content Type */}
             <div>
-              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Content Type</label>
-              <div className="nm-inset bg-background rounded-2xl p-1.5 flex gap-1.5">
+              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Content Type</label>
+              <div className="flex gap-2">
                 {ALL_CONTENT_TYPES.map(t => {
                   const colors = CONTENT_TYPE_COLORS[t];
                   const isSelected = watchedValues.type === t;
                   return (
                     <button key={t} type="button" onClick={() => setValue("type", t)}
-                      className={`flex-1 py-2.5 rounded-xl text-sm font-semibold capitalize transition-all ${
-                        isSelected
-                          ? `nm-raised ${colors.bg} ${colors.text}`
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}>
+                      className={`flex-1 py-2.5 rounded-xl text-sm font-semibold capitalize border-2 transition-all ${isSelected ? `${colors.bg} ${colors.text} border-current` : "bg-card border-card-border text-muted-foreground hover:border-border"}`}>
                       {t}
                     </button>
                   );
@@ -250,7 +240,7 @@ export default function ContentDetailPage() {
 
             {/* Media Upload */}
             <div>
-              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">
+              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
                 {watchedValues.type === "video" ? "Video" : "Image"} / Media
               </label>
               <MediaUploader
@@ -261,40 +251,26 @@ export default function ContentDetailPage() {
               />
             </div>
 
-            {/* Title */}
             <div>
-              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Title</label>
-              <input
-                {...register("title")}
-                className="nm-inset w-full bg-background rounded-2xl px-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all border-0"
-              />
-              {errors.title && <p className="text-xs text-destructive mt-1.5">{errors.title.message}</p>}
+              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Title</label>
+              <input {...register("title")} className="w-full bg-card border border-input rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" />
+              {errors.title && <p className="text-xs text-destructive mt-1">{errors.title.message}</p>}
             </div>
 
-            {/* Caption */}
             <div>
-              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Caption / Body</label>
-              <textarea
-                {...register("caption")}
-                rows={4}
-                className="nm-inset w-full bg-background rounded-2xl px-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none border-0"
-              />
+              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Caption / Body</label>
+              <textarea {...register("caption")} rows={4} className="w-full bg-card border border-input rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-none" />
             </div>
 
-            {/* Platforms */}
             <div>
-              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Platforms</label>
+              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Platforms</label>
               <div className="grid grid-cols-3 gap-2">
                 {ALL_PLATFORMS.map(p => {
                   const isSelected = (watchedValues.platforms ?? []).includes(p);
                   return (
                     <button key={p} type="button" onClick={() => togglePlatform(p)}
-                      className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                        isSelected
-                          ? "nm-inset bg-background text-primary"
-                          : "nm-raised-sm bg-background text-muted-foreground hover:text-foreground"
-                      }`}>
-                      <PlatformIcon platform={p} className="text-sm flex-shrink-0" />
+                      className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium border-2 transition-all ${isSelected ? "bg-primary/10 border-primary text-primary" : "bg-card border-card-border text-muted-foreground hover:border-border"}`}>
+                      <PlatformIcon platform={p} className="text-base flex-shrink-0" />
                       <span className="truncate">{PLATFORM_LABELS[p]}</span>
                     </button>
                   );
@@ -302,107 +278,70 @@ export default function ContentDetailPage() {
               </div>
             </div>
 
-            {/* Date & Status */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">
-                  <span className="inline-flex items-center gap-1"><RiCalendarLine /> Schedule</span>
+                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                  <span className="inline-flex items-center gap-1"><RiCalendarLine /> Scheduled Date</span>
                 </label>
-                <input
-                  type="date"
-                  {...register("scheduledDate")}
-                  className="nm-inset w-full bg-background rounded-2xl px-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all border-0"
-                />
+                <input type="date" {...register("scheduledDate")} className="w-full bg-card border border-input rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Status</label>
-                <select
-                  {...register("status")}
-                  className="nm-inset w-full bg-background rounded-2xl px-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all border-0"
-                >
-                  {ALL_STATUSES.map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Status</label>
+                <select {...register("status")} className="w-full bg-card border border-input rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors">
+                  {ALL_STATUSES.map(s => <option key={s} value={s} className="capitalize">{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
                 </select>
               </div>
             </div>
 
-            {/* Tags */}
             <div>
-              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Tags</label>
-              {(watchedValues.tags ?? []).length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mb-2">
-                  {(watchedValues.tags ?? []).map(tag => (
-                    <span key={tag} className="nm-raised-sm inline-flex items-center gap-1 bg-background text-primary text-xs font-semibold px-2.5 py-1 rounded-lg">
-                      #{tag}
-                      <button type="button" onClick={() => removeTag(tag)} className="hover:text-destructive transition-colors">
-                        <RiCloseLine className="text-xs" />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              )}
-              <input
-                value={tagInput}
-                onChange={e => setTagInput(e.target.value)}
-                onKeyDown={addTag}
-                placeholder="Type a tag and press Enter..."
-                className="nm-inset w-full bg-background rounded-2xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all border-0"
-              />
+              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Tags</label>
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {(watchedValues.tags ?? []).map(tag => (
+                  <span key={tag} className="inline-flex items-center gap-1 bg-accent text-accent-foreground text-xs font-medium px-2.5 py-1 rounded-full">
+                    #{tag}
+                    <button type="button" onClick={() => removeTag(tag)} className="hover:text-destructive"><RiCloseLine className="text-xs" /></button>
+                  </span>
+                ))}
+              </div>
+              <input value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={addTag} placeholder="Type a tag and press Enter..." className="w-full bg-card border border-input rounded-xl px-4 py-2 text-sm placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" />
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-3 pt-1">
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                className="nm-raised flex-1 py-3 rounded-2xl bg-background text-sm font-semibold text-muted-foreground hover:text-foreground transition-all active:nm-inset"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={updateMutation.isPending}
-                className="nm-raised flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-all active:nm-inset"
-              >
+            <div className="flex gap-3 pt-2">
+              <button type="button" onClick={() => setIsEditing(false)} className="flex-1 py-2.5 rounded-xl border border-border text-sm font-semibold text-muted-foreground hover:bg-secondary transition-colors">Cancel</button>
+              <button type="submit" disabled={updateMutation.isPending} className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity">
                 <RiSendPlaneLine />
                 {updateMutation.isPending ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </form>
         ) : (
-          /* View mode */
-          <div className="flex flex-col gap-6">
-            {/* Type + Status badges */}
-            <div className="nm-raised bg-background rounded-2xl px-5 py-4 flex items-center gap-3 flex-wrap">
-              <span className={`nm-raised-sm inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold capitalize ${typeColors.bg} ${typeColors.text}`}>
+          <div className="flex flex-col gap-5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold ${typeColors.bg} ${typeColors.text}`}>
                 {content.type}
               </span>
-              <span className={`nm-raised-sm inline-flex items-center px-3 py-1.5 rounded-xl text-sm font-medium ${statusColors.bg} ${statusColors.text}`}>
+              <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border ${statusColors.bg} ${statusColors.text} ${statusColors.border}`}>
                 {content.status}
               </span>
             </div>
 
-            {/* Scheduled date */}
-            <div className="nm-raised bg-background rounded-2xl px-5 py-4">
-              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1.5">Scheduled</div>
-              <div className="text-sm font-semibold text-foreground">
+            <div>
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Scheduled</div>
+              <div className="text-sm font-medium text-foreground">
                 {format(parseISO(content.scheduledDate), "EEEE, MMMM d, yyyy")}
               </div>
             </div>
 
-            {/* Caption */}
-            <div className="nm-raised bg-background rounded-2xl px-5 py-4">
-              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1.5">Caption</div>
-              <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-                {content.caption || <span className="text-muted-foreground italic">No caption</span>}
-              </p>
+            <div>
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Caption</div>
+              <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{content.caption || <span className="text-muted-foreground italic">No caption</span>}</p>
             </div>
 
-            {/* Platforms */}
-            <div className="nm-raised bg-background rounded-2xl px-5 py-4">
-              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Platforms</div>
+            <div>
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Platforms</div>
               <div className="flex flex-wrap gap-2">
                 {(content.platforms as Platform[]).map(p => (
-                  <span key={p} className="nm-raised-sm inline-flex items-center gap-1.5 bg-background text-muted-foreground text-xs font-semibold px-3 py-1.5 rounded-xl">
+                  <span key={p} className="inline-flex items-center gap-1.5 bg-secondary text-secondary-foreground text-xs font-medium px-3 py-1.5 rounded-full">
                     <PlatformIcon platform={p} className="text-sm" />
                     {PLATFORM_LABELS[p]}
                   </span>
@@ -410,33 +349,24 @@ export default function ContentDetailPage() {
               </div>
             </div>
 
-            {/* Tags */}
             {content.tags.length > 0 && (
-              <div className="nm-raised bg-background rounded-2xl px-5 py-4">
-                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Tags</div>
+              <div>
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Tags</div>
                 <div className="flex flex-wrap gap-1.5">
                   {content.tags.map(tag => (
-                    <span key={tag} className="nm-raised-sm bg-background text-primary text-xs font-semibold px-2.5 py-1 rounded-lg">#{tag}</span>
+                    <span key={tag} className="bg-accent text-accent-foreground text-xs font-medium px-2.5 py-1 rounded-full">#{tag}</span>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Media */}
             {content.mediaUrl && (
-              <div className="nm-raised bg-background rounded-2xl overflow-hidden">
+              <div>
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Media</div>
                 {content.type === "video" ? (
-                  <video
-                    src={`/api/storage${content.mediaUrl}`}
-                    controls
-                    className="w-full max-h-52 bg-black"
-                  />
+                  <video src={`/api/storage${content.mediaUrl}`} controls className="w-full rounded-xl max-h-48 bg-black" />
                 ) : (
-                  <img
-                    src={`/api/storage${content.mediaUrl}`}
-                    alt="content media"
-                    className="w-full max-h-52 object-cover"
-                  />
+                  <img src={`/api/storage${content.mediaUrl}`} alt="content media" className="w-full rounded-xl max-h-48 object-cover" />
                 )}
               </div>
             )}
@@ -444,19 +374,15 @@ export default function ContentDetailPage() {
         )}
 
         {/* Platform Preview Panel */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4">
           <div>
-            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Platform Preview</div>
-            <div className="nm-inset bg-background rounded-2xl p-1.5 flex flex-wrap gap-1">
+            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Platform Preview</div>
+            <div className="flex flex-wrap gap-2 mb-4">
               {displayPlatforms.map(p => (
                 <button
                   key={p}
                   onClick={() => setActivePlatformPreview(p)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                    activePlatformPreview === p
-                      ? "nm-raised bg-background text-primary"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${activePlatformPreview === p ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:border-primary/50"}`}
                 >
                   <PlatformIcon platform={p} className="text-sm" />
                   {PLATFORM_LABELS[p]}
@@ -465,7 +391,7 @@ export default function ContentDetailPage() {
             </div>
           </div>
 
-          <div className="nm-inset bg-background rounded-3xl p-6 flex items-start justify-center min-h-[420px]">
+          <div className="bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl p-6 flex items-start justify-center min-h-[400px]">
             <div className="w-full max-w-xs">
               <PlatformPreview
                 platform={activePlatformPreview}

@@ -117,23 +117,22 @@ export default function CreateContentPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background nm-raised relative z-10 px-6 py-4 flex items-center gap-3">
+      <header className="bg-sidebar border-b border-sidebar-border px-6 py-4 flex items-center gap-4">
         <Link href="/">
-          <button className="nm-raised w-9 h-9 flex items-center justify-center rounded-xl bg-background text-muted-foreground hover:text-primary transition-colors active:nm-inset">
-            <RiArrowLeftLine className="text-base" />
+          <button className="p-1.5 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground transition-colors">
+            <RiArrowLeftLine className="text-xl" />
           </button>
         </Link>
-        <h1 className="text-foreground font-bold text-lg tracking-tight">Create Content</h1>
+        <h1 className="text-sidebar-foreground font-bold text-lg">Create Content</h1>
       </header>
 
-      <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
           {/* Content Type */}
           <div>
-            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Content Type</label>
-            <div className="nm-inset bg-background rounded-2xl p-1.5 flex gap-1.5">
+            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Content Type</label>
+            <div className="flex gap-2">
               {ALL_CONTENT_TYPES.map(t => {
                 const colors = CONTENT_TYPE_COLORS[t];
                 const isSelected = watchedValues.type === t;
@@ -142,11 +141,7 @@ export default function CreateContentPage() {
                     key={t}
                     type="button"
                     onClick={() => setValue("type", t)}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold capitalize transition-all ${
-                      isSelected
-                        ? `nm-raised ${colors.bg} ${colors.text}`
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
+                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold capitalize border-2 transition-all ${isSelected ? `${colors.bg} ${colors.text} border-current` : "bg-card border-card-border text-muted-foreground hover:border-border"}`}
                   >
                     {t}
                   </button>
@@ -157,7 +152,7 @@ export default function CreateContentPage() {
 
           {/* Media Upload */}
           <div>
-            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">
+            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
               {watchedValues.type === "video" ? "Video" : "Image"} / Media
             </label>
             <MediaUploader
@@ -170,29 +165,29 @@ export default function CreateContentPage() {
 
           {/* Title */}
           <div>
-            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Title</label>
+            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Title</label>
             <input
               {...register("title")}
               placeholder="Give your content a title..."
-              className="nm-inset w-full bg-background rounded-2xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all border-0"
+              className="w-full bg-card border border-input rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
             />
-            {errors.title && <p className="text-xs text-destructive mt-1.5">{errors.title.message}</p>}
+            {errors.title && <p className="text-xs text-destructive mt-1">{errors.title.message}</p>}
           </div>
 
           {/* Caption */}
           <div>
-            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Caption / Body</label>
+            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Caption / Body</label>
             <textarea
               {...register("caption")}
               rows={4}
               placeholder="Write your caption or content body..."
-              className="nm-inset w-full bg-background rounded-2xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none border-0"
+              className="w-full bg-card border border-input rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-none"
             />
           </div>
 
           {/* Platforms */}
           <div>
-            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Platforms</label>
+            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Platforms</label>
             <div className="grid grid-cols-3 gap-2">
               {ALL_PLATFORMS.map(p => {
                 const isSelected = selectedPlatforms.includes(p);
@@ -201,42 +196,38 @@ export default function CreateContentPage() {
                     key={p}
                     type="button"
                     onClick={() => togglePlatform(p)}
-                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                      isSelected
-                        ? "nm-inset bg-background text-primary"
-                        : "nm-raised-sm bg-background text-muted-foreground hover:text-foreground"
-                    }`}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium border-2 transition-all ${isSelected ? "bg-primary/10 border-primary text-primary" : "bg-card border-card-border text-muted-foreground hover:border-border"}`}
                   >
-                    <PlatformIcon platform={p} className="text-sm flex-shrink-0" />
-                    <span className="truncate">{PLATFORM_LABELS[p]}</span>
+                    <PlatformIcon platform={p} className="text-base flex-shrink-0" />
+                    <span className="truncate text-xs">{PLATFORM_LABELS[p]}</span>
                   </button>
                 );
               })}
             </div>
-            {errors.platforms && <p className="text-xs text-destructive mt-1.5">{errors.platforms.message as string}</p>}
+            {errors.platforms && <p className="text-xs text-destructive mt-1">{errors.platforms.message as string}</p>}
           </div>
 
-          {/* Date & Status */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* Date & Status row */}
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">
-                <span className="inline-flex items-center gap-1"><RiCalendarLine /> Schedule</span>
+              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                <span className="inline-flex items-center gap-1"><RiCalendarLine /> Scheduled Date</span>
               </label>
               <input
                 type="date"
                 {...register("scheduledDate")}
-                className="nm-inset w-full bg-background rounded-2xl px-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all border-0"
+                className="w-full bg-card border border-input rounded-xl px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
               />
-              {errors.scheduledDate && <p className="text-xs text-destructive mt-1.5">{errors.scheduledDate.message}</p>}
+              {errors.scheduledDate && <p className="text-xs text-destructive mt-1">{errors.scheduledDate.message}</p>}
             </div>
             <div>
-              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Status</label>
+              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Status</label>
               <select
                 {...register("status")}
-                className="nm-inset w-full bg-background rounded-2xl px-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all border-0"
+                className="w-full bg-card border border-input rounded-xl px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
               >
                 {ALL_STATUSES.map(s => (
-                  <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                  <option key={s} value={s} className="capitalize">{s.charAt(0).toUpperCase() + s.slice(1)}</option>
                 ))}
               </select>
             </div>
@@ -244,60 +235,54 @@ export default function CreateContentPage() {
 
           {/* Tags */}
           <div>
-            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Tags</label>
-            {watchedValues.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mb-2">
-                {watchedValues.tags.map(tag => (
-                  <span key={tag} className="nm-raised-sm inline-flex items-center gap-1 bg-background text-primary text-xs font-semibold px-2.5 py-1 rounded-lg">
-                    #{tag}
-                    <button type="button" onClick={() => removeTag(tag)} className="hover:text-destructive transition-colors">
-                      <RiCloseLine className="text-xs" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
+            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Tags</label>
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              {watchedValues.tags.map(tag => (
+                <span key={tag} className="inline-flex items-center gap-1 bg-accent text-accent-foreground text-xs font-medium px-2.5 py-1 rounded-full">
+                  #{tag}
+                  <button type="button" onClick={() => removeTag(tag)} className="hover:text-destructive transition-colors">
+                    <RiCloseLine className="text-xs" />
+                  </button>
+                </span>
+              ))}
+            </div>
             <input
               value={tagInput}
               onChange={e => setTagInput(e.target.value)}
               onKeyDown={addTag}
               placeholder="Type a tag and press Enter..."
-              className="nm-inset w-full bg-background rounded-2xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all border-0"
+              className="w-full bg-card border border-input rounded-xl px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
             />
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-1">
+          <div className="flex gap-3 pt-2">
             <Link href="/" className="flex-1">
-              <button type="button" className="nm-raised w-full py-3 rounded-2xl bg-background text-sm font-semibold text-muted-foreground hover:text-foreground transition-all active:nm-inset">
+              <button type="button" className="w-full py-2.5 rounded-xl border border-border text-sm font-semibold text-muted-foreground hover:bg-secondary transition-colors">
                 Cancel
               </button>
             </Link>
             <button
               type="submit"
               disabled={createMutation.isPending}
-              className="nm-raised flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all disabled:opacity-50 active:nm-inset"
+              className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
             >
               <RiSendPlaneLine />
-              {createMutation.isPending ? "Saving..." : `Save${watchedValues.status === "published" ? " & Publish" : ""}`}
+              {createMutation.isPending ? "Saving..." : `Save ${watchedValues.status === "published" ? "& Publish" : ""}`}
             </button>
           </div>
         </form>
 
         {/* Platform Preview Panel */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4">
           <div>
-            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Platform Preview</div>
-            <div className="nm-inset bg-background rounded-2xl p-1.5 flex flex-wrap gap-1">
+            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Platform Preview</div>
+            <div className="flex flex-wrap gap-2 mb-4">
               {selectedPlatforms.map(p => (
                 <button
                   key={p}
                   onClick={() => setActivePlatformPreview(p)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                    activePlatformPreview === p
-                      ? "nm-raised bg-background text-primary"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${activePlatformPreview === p ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:border-primary/50"}`}
                 >
                   <PlatformIcon platform={p} className="text-sm" />
                   {PLATFORM_LABELS[p]}
@@ -306,7 +291,7 @@ export default function CreateContentPage() {
             </div>
           </div>
 
-          <div className="nm-inset bg-background rounded-3xl p-6 flex items-start justify-center min-h-[420px]">
+          <div className="bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl p-6 flex items-start justify-center min-h-[400px]">
             <div className="w-full max-w-xs">
               <PlatformPreview
                 platform={activePlatformPreview}
@@ -319,7 +304,7 @@ export default function CreateContentPage() {
           </div>
 
           <p className="text-xs text-muted-foreground text-center">
-            Preview updates as you type — upload media to see it here
+            Preview updates as you type — upload media to see it in the preview
           </p>
         </div>
       </div>
