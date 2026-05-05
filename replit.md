@@ -25,3 +25,37 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - `pnpm --filter @workspace/api-server run dev` — run API server locally
 
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
+
+## Artifacts
+
+### Media Planner (`artifacts/media-planner`)
+- **Preview path**: `/`
+- **Purpose**: Content calendar tool for planning social media posts, videos, and articles
+- **Pages**:
+  - `/` — Monthly calendar view with per-day content chips and stats bar
+  - `/create` — Create content with live platform previews (Instagram, Facebook, Twitter/X, TikTok, YouTube, LinkedIn)
+  - `/content/:id` — View/edit content detail with platform preview
+
+### API Server (`artifacts/api-server`)
+- **Preview path**: `/api`
+- **Purpose**: Express 5 REST API for the media planner
+- **Routes**:
+  - `GET/POST /api/content` — List/create content
+  - `GET/PUT/DELETE /api/content/:id` — Get/update/delete content
+  - `GET /api/calendar/month-summary` — Per-day content counts for a month
+  - `GET /api/calendar/stats` — Aggregate stats (totals, by type/status/platform)
+
+## Database Schema
+
+### `content` table
+- `id` (serial PK)
+- `title` (text)
+- `caption` (text)
+- `type` (enum: video | post | article)
+- `status` (enum: draft | scheduled | published)
+- `platforms` (text[]) — instagram, facebook, twitter, tiktok, youtube, linkedin
+- `scheduled_date` (date)
+- `media_url` (text, nullable)
+- `thumbnail_url` (text, nullable)
+- `tags` (text[])
+- `created_at`, `updated_at` (timestamp)

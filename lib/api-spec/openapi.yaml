@@ -3,13 +3,17 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Media Planner API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: content
+    description: Content management operations
+  - name: calendar
+    description: Calendar and summary operations
 paths:
   /healthz:
     get:
@@ -24,6 +28,186 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /content:
+    get:
+      operationId: listContent
+      tags: [content]
+      summary: List all content items
+      parameters:
+        - name: month
+          in: query
+          schema:
+            type: integer
+          description: Filter by month (1-12)
+        - name: year
+          in: query
+          schema:
+            type: integer
+          description: Filter by year
+        - name: type
+          in: query
+          schema:
+            $ref: "#/components/schemas/ContentType"
+          description: Filter by content type
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/ContentStatus"
+          description: Filter by status
+        - name: platform
+          in: query
+          schema:
+            type: string
+          description: Filter by platform
+      responses:
+        "200":
+          description: List of content items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Content"
+    post:
+      operationId: createContent
+      tags: [content]
+      summary: Create a new content item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContentBody"
+      responses:
+        "201":
+          description: Content created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Content"
+
+  /content/{id}:
+    get:
+      operationId: getContent
+      tags: [content]
+      summary: Get a content item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Content item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Content"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateContent
+      tags: [content]
+      summary: Update a content item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContentBody"
+      responses:
+        "200":
+          description: Updated content item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Content"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteContent
+      tags: [content]
+      summary: Delete a content item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /calendar/month-summary:
+    get:
+      operationId: getMonthSummary
+      tags: [calendar]
+      summary: Get a summary of content for a given month
+      parameters:
+        - name: month
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: Month (1-12)
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: Year
+      responses:
+        "200":
+          description: Month summary with counts per day
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MonthSummary"
+
+  /calendar/stats:
+    get:
+      operationId: getContentStats
+      tags: [calendar]
+      summary: Get content statistics
+      parameters:
+        - name: month
+          in: query
+          schema:
+            type: integer
+        - name: year
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Content stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +218,227 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    ContentType:
+      type: string
+      enum: [video, post, article]
+
+    ContentStatus:
+      type: string
+      enum: [draft, scheduled, published]
+
+    Platform:
+      type: string
+      enum: [instagram, facebook, twitter, tiktok, youtube, linkedin]
+
+    Content:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        caption:
+          type: string
+        type:
+          $ref: "#/components/schemas/ContentType"
+        status:
+          $ref: "#/components/schemas/ContentStatus"
+        platforms:
+          type: array
+          items:
+            $ref: "#/components/schemas/Platform"
+        scheduledDate:
+          type: string
+          description: ISO date string (YYYY-MM-DD)
+        mediaUrl:
+          type: string
+          nullable: true
+        thumbnailUrl:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - title
+        - caption
+        - type
+        - status
+        - platforms
+        - scheduledDate
+        - tags
+        - createdAt
+        - updatedAt
+
+    CreateContentBody:
+      type: object
+      properties:
+        title:
+          type: string
+        caption:
+          type: string
+        type:
+          $ref: "#/components/schemas/ContentType"
+        status:
+          $ref: "#/components/schemas/ContentStatus"
+        platforms:
+          type: array
+          items:
+            $ref: "#/components/schemas/Platform"
+        scheduledDate:
+          type: string
+          description: ISO date string (YYYY-MM-DD)
+        mediaUrl:
+          type: string
+          nullable: true
+        thumbnailUrl:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - title
+        - caption
+        - type
+        - status
+        - platforms
+        - scheduledDate
+
+    UpdateContentBody:
+      type: object
+      properties:
+        title:
+          type: string
+        caption:
+          type: string
+        type:
+          $ref: "#/components/schemas/ContentType"
+        status:
+          $ref: "#/components/schemas/ContentStatus"
+        platforms:
+          type: array
+          items:
+            $ref: "#/components/schemas/Platform"
+        scheduledDate:
+          type: string
+          description: ISO date string (YYYY-MM-DD)
+        mediaUrl:
+          type: string
+          nullable: true
+        thumbnailUrl:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+
+    DaySummary:
+      type: object
+      properties:
+        date:
+          type: string
+          description: ISO date string (YYYY-MM-DD)
+        total:
+          type: integer
+        byType:
+          type: object
+          properties:
+            video:
+              type: integer
+            post:
+              type: integer
+            article:
+              type: integer
+          required: [video, post, article]
+        byStatus:
+          type: object
+          properties:
+            draft:
+              type: integer
+            scheduled:
+              type: integer
+            published:
+              type: integer
+          required: [draft, scheduled, published]
+      required:
+        - date
+        - total
+        - byType
+        - byStatus
+
+    MonthSummary:
+      type: object
+      properties:
+        month:
+          type: integer
+        year:
+          type: integer
+        days:
+          type: array
+          items:
+            $ref: "#/components/schemas/DaySummary"
+        totalContent:
+          type: integer
+      required:
+        - month
+        - year
+        - days
+        - totalContent
+
+    ContentStats:
+      type: object
+      properties:
+        total:
+          type: integer
+        byType:
+          type: object
+          properties:
+            video:
+              type: integer
+            post:
+              type: integer
+            article:
+              type: integer
+          required: [video, post, article]
+        byStatus:
+          type: object
+          properties:
+            draft:
+              type: integer
+            scheduled:
+              type: integer
+            published:
+              type: integer
+          required: [draft, scheduled, published]
+        byPlatform:
+          type: object
+          additionalProperties:
+            type: integer
+        publishedThisMonth:
+          type: integer
+        scheduledThisMonth:
+          type: integer
+      required:
+        - total
+        - byType
+        - byStatus
+        - byPlatform
+        - publishedThisMonth
+        - scheduledThisMonth
