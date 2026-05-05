@@ -60,15 +60,15 @@ export default function CalendarPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <header className="bg-sidebar px-6 py-4 flex items-center justify-between">
+      <header className="bg-background nm-raised relative z-10 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="nm-inset-dark w-9 h-9 rounded-xl flex items-center justify-center">
-            <RiCalendar2Line className="text-sidebar-primary text-lg" />
+          <div className="nm-inset w-9 h-9 rounded-xl flex items-center justify-center">
+            <RiCalendar2Line className="text-primary text-lg" />
           </div>
-          <span className="text-sidebar-foreground font-bold text-lg tracking-tight">Media Planner</span>
+          <span className="text-foreground font-bold text-lg tracking-tight">Media Planner</span>
         </div>
         <Link href="/create">
-          <button className="nm-raised-dark inline-flex items-center gap-1.5 bg-sidebar-primary/20 hover:bg-sidebar-primary/30 text-sidebar-primary text-sm font-semibold px-4 py-2 rounded-xl transition-all active:nm-inset-dark">
+          <button className="nm-raised inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:opacity-90 active:nm-inset">
             <RiAddLine className="text-base" /> New Content
           </button>
         </Link>

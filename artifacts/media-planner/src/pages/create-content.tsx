@@ -117,13 +117,13 @@ export default function CreateContentPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-sidebar px-6 py-4 flex items-center gap-3">
+      <header className="bg-background nm-raised relative z-10 px-6 py-4 flex items-center gap-3">
         <Link href="/">
-          <button className="nm-raised-dark w-8 h-8 flex items-center justify-center rounded-xl text-sidebar-foreground hover:text-sidebar-primary transition-colors active:nm-inset-dark">
+          <button className="nm-raised w-9 h-9 flex items-center justify-center rounded-xl bg-background text-muted-foreground hover:text-primary transition-colors active:nm-inset">
             <RiArrowLeftLine className="text-base" />
           </button>
         </Link>
-        <h1 className="text-sidebar-foreground font-bold text-lg tracking-tight">Create Content</h1>
+        <h1 className="text-foreground font-bold text-lg tracking-tight">Create Content</h1>
       </header>
 
       <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">

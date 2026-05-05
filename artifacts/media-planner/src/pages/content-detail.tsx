@@ -183,25 +183,25 @@ export default function ContentDetailPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-sidebar px-6 py-4 flex items-center gap-3">
+      <header className="bg-background nm-raised relative z-10 px-6 py-4 flex items-center gap-3">
         <Link href="/">
-          <button className="nm-raised-dark w-8 h-8 flex items-center justify-center rounded-xl text-sidebar-foreground hover:text-sidebar-primary transition-colors active:nm-inset-dark flex-shrink-0">
+          <button className="nm-raised w-9 h-9 flex items-center justify-center rounded-xl bg-background text-muted-foreground hover:text-primary transition-colors active:nm-inset flex-shrink-0">
             <RiArrowLeftLine className="text-base" />
           </button>
         </Link>
-        <h1 className="text-sidebar-foreground font-bold text-lg flex-1 truncate tracking-tight">{content.title}</h1>
+        <h1 className="text-foreground font-bold text-lg flex-1 truncate tracking-tight">{content.title}</h1>
         <div className="flex items-center gap-2">
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="nm-raised-dark inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sidebar-accent/50 text-sidebar-foreground text-sm font-medium hover:text-sidebar-primary transition-colors active:nm-inset-dark"
+              className="nm-raised inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-background text-muted-foreground text-sm font-medium hover:text-primary transition-colors active:nm-inset"
             >
               <RiPencilLine className="text-sm" /> Edit
             </button>
           )}
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <button className="nm-raised-dark inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-destructive/10 text-destructive text-sm font-medium hover:bg-destructive/20 transition-colors active:nm-inset-dark">
+              <button className="nm-raised inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-background text-destructive text-sm font-medium hover:opacity-80 transition-colors active:nm-inset">
                 <RiDeleteBinLine className="text-sm" /> Delete
               </button>
             </AlertDialogTrigger>
