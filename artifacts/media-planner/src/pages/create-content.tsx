@@ -4,11 +4,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
-import { RiArrowLeftLine, RiCalendarLine, RiCloseLine, RiAddLine, RiSendPlaneLine } from "react-icons/ri";
+import { RiArrowLeftLine, RiCalendarLine, RiCloseLine, RiSendPlaneLine } from "react-icons/ri";
 import { useCreateContent } from "@workspace/api-client-react";
 import { PLATFORM_LABELS, ALL_PLATFORMS, ALL_CONTENT_TYPES, ALL_STATUSES, CONTENT_TYPE_COLORS } from "@/lib/content-utils";
 import type { Platform, ContentType, ContentStatus } from "@/lib/content-utils";
 import { PlatformPreview, PlatformIcon } from "@/components/platform-preview";
+import { MediaUploader } from "@/components/media-uploader";
 import { useToast } from "@/hooks/use-toast";
 
 const schema = z.object({
@@ -111,6 +112,7 @@ export default function CreateContentPage() {
   }
 
   const selectedPlatforms = watchedValues.platforms as Platform[];
+  const mediaServingUrl = watchedValues.mediaUrl ? `/api/storage${watchedValues.mediaUrl}` : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -146,6 +148,19 @@ export default function CreateContentPage() {
                 );
               })}
             </div>
+          </div>
+
+          {/* Media Upload */}
+          <div>
+            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+              {watchedValues.type === "video" ? "Video" : "Image"} / Media
+            </label>
+            <MediaUploader
+              value={watchedValues.mediaUrl}
+              onChange={(path) => setValue("mediaUrl", path)}
+              accept={watchedValues.type === "video" ? "video" : "both"}
+              label={watchedValues.type === "video" ? "Upload video" : "Upload image or video"}
+            />
           </div>
 
           {/* Title */}
@@ -283,13 +298,13 @@ export default function CreateContentPage() {
                 title={watchedValues.title}
                 caption={watchedValues.caption}
                 contentType={watchedValues.type as ContentType}
-                mediaUrl={watchedValues.mediaUrl}
+                mediaUrl={mediaServingUrl}
               />
             </div>
           </div>
 
           <p className="text-xs text-muted-foreground text-center">
-            Preview updates as you type — select a platform above to switch views
+            Preview updates as you type — upload media to see it in the preview
           </p>
         </div>
       </div>

@@ -15,6 +15,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CONTENT_TYPE_COLORS, CONTENT_STATUS_COLORS, PLATFORM_LABELS, ALL_PLATFORMS, ALL_CONTENT_TYPES, ALL_STATUSES } from "@/lib/content-utils";
 import type { Platform, ContentType, ContentStatus } from "@/lib/content-utils";
 import { PlatformPreview, PlatformIcon } from "@/components/platform-preview";
+import { MediaUploader } from "@/components/media-uploader";
 import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -237,6 +238,19 @@ export default function ContentDetailPage() {
               </div>
             </div>
 
+            {/* Media Upload */}
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                {watchedValues.type === "video" ? "Video" : "Image"} / Media
+              </label>
+              <MediaUploader
+                value={watchedValues.mediaUrl}
+                onChange={(path) => setValue("mediaUrl", path)}
+                accept={watchedValues.type === "video" ? "video" : "both"}
+                label={watchedValues.type === "video" ? "Upload video" : "Upload image or video"}
+              />
+            </div>
+
             <div>
               <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Title</label>
               <input {...register("title")} className="w-full bg-card border border-input rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" />
@@ -346,6 +360,25 @@ export default function ContentDetailPage() {
                 </div>
               </div>
             )}
+
+            {content.mediaUrl && (
+              <div>
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Media</div>
+                {content.type === "video" ? (
+                  <video
+                    src={`/api/storage${content.mediaUrl}`}
+                    controls
+                    className="w-full rounded-xl max-h-48 bg-black"
+                  />
+                ) : (
+                  <img
+                    src={`/api/storage${content.mediaUrl}`}
+                    alt="content media"
+                    className="w-full rounded-xl max-h-48 object-cover"
+                  />
+                )}
+              </div>
+            )}
           </div>
         )}
 
@@ -374,7 +407,13 @@ export default function ContentDetailPage() {
                 title={displayTitle}
                 caption={displayCaption}
                 contentType={displayType}
-                mediaUrl={content.mediaUrl}
+                mediaUrl={
+                  isEditing && watchedValues.mediaUrl
+                    ? `/api/storage${watchedValues.mediaUrl}`
+                    : content.mediaUrl
+                    ? `/api/storage${content.mediaUrl}`
+                    : null
+                }
               />
             </div>
           </div>

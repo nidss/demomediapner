@@ -24,7 +24,18 @@ function AvatarPlaceholder({ size = 8 }: { size?: number }) {
   );
 }
 
-function MediaPlaceholder({ type, className }: { type: ContentType; className?: string }) {
+function MediaDisplay({ type, mediaUrl, className }: { type: ContentType; mediaUrl?: string | null; className?: string }) {
+  if (mediaUrl) {
+    if (type === "video") {
+      return (
+        <div className={`bg-black flex items-center justify-center relative ${className ?? ""}`}>
+          <video src={mediaUrl} className="w-full h-full object-cover" />
+          <RiPlayCircleLine className="absolute text-white/80 text-4xl pointer-events-none" />
+        </div>
+      );
+    }
+    return <img src={mediaUrl} alt="media" className={`object-cover ${className ?? ""}`} />;
+  }
   return (
     <div className={`bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center ${className ?? ""}`}>
       {type === "video" ? (
@@ -36,7 +47,7 @@ function MediaPlaceholder({ type, className }: { type: ContentType; className?: 
   );
 }
 
-function InstagramPreview({ title, caption, contentType }: PreviewProps) {
+function InstagramPreview({ title, caption, contentType, mediaUrl }: PreviewProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden border border-gray-200 text-xs font-sans max-w-xs mx-auto">
       <div className="flex items-center gap-2 px-3 py-2.5">
@@ -47,7 +58,7 @@ function InstagramPreview({ title, caption, contentType }: PreviewProps) {
         </div>
         <RiMoreLine className="ml-auto text-gray-500 text-base" />
       </div>
-      <MediaPlaceholder type={contentType} className="aspect-square w-full" />
+      <MediaDisplay type={contentType} mediaUrl={mediaUrl} className="aspect-square w-full" />
       <div className="px-3 py-2">
         <div className="flex gap-3 mb-2 text-gray-800">
           <RiHeartLine className="text-xl" />
@@ -64,7 +75,7 @@ function InstagramPreview({ title, caption, contentType }: PreviewProps) {
   );
 }
 
-function FacebookPreview({ title, caption, contentType }: PreviewProps) {
+function FacebookPreview({ title, caption, contentType, mediaUrl }: PreviewProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden border border-gray-200 text-xs max-w-xs mx-auto">
       <div className="flex items-center gap-2 px-3 py-3">
@@ -78,7 +89,7 @@ function FacebookPreview({ title, caption, contentType }: PreviewProps) {
       <div className="px-3 pb-2 text-[12px] text-gray-800 leading-relaxed line-clamp-3">
         {caption || title || "Your post content here..."}
       </div>
-      <MediaPlaceholder type={contentType} className="w-full h-40" />
+      <MediaDisplay type={contentType} mediaUrl={mediaUrl} className="w-full h-40" />
       <div className="px-3 py-2 border-t border-gray-100">
         <div className="flex gap-1 text-[11px] text-gray-500 mb-2">
           <span>128 reactions</span>
@@ -134,11 +145,11 @@ function TwitterPreview({ title, caption }: PreviewProps) {
   );
 }
 
-function TikTokPreview({ title, caption, contentType }: PreviewProps) {
+function TikTokPreview({ title, caption, contentType, mediaUrl }: PreviewProps) {
   return (
     <div className="bg-black rounded-xl overflow-hidden text-xs max-w-[160px] mx-auto" style={{ aspectRatio: "9/16" }}>
       <div className="relative h-full">
-        <MediaPlaceholder type={contentType} className="absolute inset-0 w-full h-full bg-gradient-to-b from-zinc-800 to-zinc-900" />
+        <MediaDisplay type={contentType} mediaUrl={mediaUrl} className="absolute inset-0 w-full h-full bg-gradient-to-b from-zinc-800 to-zinc-900" />
         <div className="absolute inset-0 flex flex-col justify-end p-3">
           <div className="text-white mb-2">
             <div className="font-semibold text-[11px] mb-1">@yourbrand</div>
@@ -159,10 +170,10 @@ function TikTokPreview({ title, caption, contentType }: PreviewProps) {
   );
 }
 
-function YouTubePreview({ title, caption, contentType }: PreviewProps) {
+function YouTubePreview({ title, caption, contentType, mediaUrl }: PreviewProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden border border-gray-200 text-xs max-w-xs mx-auto">
-      <MediaPlaceholder type={contentType} className="w-full h-36 rounded-t-xl" />
+      <MediaDisplay type={contentType} mediaUrl={mediaUrl} className="w-full h-36 rounded-t-xl" />
       <div className="p-3 flex gap-2">
         <AvatarPlaceholder size={8} />
         <div>
@@ -175,7 +186,7 @@ function YouTubePreview({ title, caption, contentType }: PreviewProps) {
   );
 }
 
-function LinkedInPreview({ title, caption, contentType }: PreviewProps) {
+function LinkedInPreview({ title, caption, contentType, mediaUrl }: PreviewProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden border border-gray-200 text-xs max-w-xs mx-auto">
       <div className="flex items-start gap-2 px-3 py-3">
@@ -190,7 +201,7 @@ function LinkedInPreview({ title, caption, contentType }: PreviewProps) {
       <div className="px-3 pb-2 text-[12px] text-gray-800 leading-relaxed line-clamp-3">
         {caption || title || "Your post content here..."}
       </div>
-      <MediaPlaceholder type={contentType} className="w-full h-36" />
+      <MediaDisplay type={contentType} mediaUrl={mediaUrl} className="w-full h-36" />
       <div className="px-3 py-2 border-t border-gray-100">
         <div className="flex gap-1 text-[10px] text-gray-500 mb-2">
           <span>48 reactions</span>
