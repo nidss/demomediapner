@@ -74,12 +74,12 @@ export function MediaUploader({
   return (
     <div>
       {value || isUploading ? (
-        <div className="relative rounded-xl overflow-hidden border border-card-border bg-card">
+        <div className="nm-inset bg-background relative rounded-2xl overflow-hidden">
           {isUploading ? (
             <div className="flex flex-col items-center justify-center h-40 gap-3">
               <RiLoaderLine className="text-primary text-3xl animate-spin" />
-              <div className="text-sm text-muted-foreground">Uploading... {progress}%</div>
-              <div className="w-48 h-1.5 bg-muted rounded-full overflow-hidden">
+              <div className="text-sm text-muted-foreground font-medium">Uploading... {progress}%</div>
+              <div className="nm-inset-sm w-48 h-2 bg-background rounded-full overflow-hidden">
                 <div
                   className="h-full bg-primary rounded-full transition-all duration-300"
                   style={{ width: `${progress}%` }}
@@ -93,25 +93,29 @@ export function MediaUploader({
               ) : servingUrl && !showVideo ? (
                 <img src={servingUrl} alt="Uploaded" className="w-full h-48 object-cover" />
               ) : showVideo ? (
-                <div className="flex items-center justify-center h-40 bg-slate-100 gap-3">
-                  <RiVideoLine className="text-slate-400 text-3xl" />
+                <div className="flex items-center justify-center h-40 gap-3">
+                  <div className="nm-raised-sm w-12 h-12 flex items-center justify-center rounded-2xl bg-background">
+                    <RiVideoLine className="text-primary text-xl" />
+                  </div>
                   <span className="text-sm text-muted-foreground font-medium">{fileName ?? "Video uploaded"}</span>
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-40 bg-slate-50 gap-3">
-                  <RiImageLine className="text-slate-300 text-3xl" />
+                <div className="flex items-center justify-center h-40 gap-3">
+                  <div className="nm-raised-sm w-12 h-12 flex items-center justify-center rounded-2xl bg-background">
+                    <RiImageLine className="text-muted-foreground text-xl" />
+                  </div>
                   <span className="text-sm text-muted-foreground">{fileName ?? "File uploaded"}</span>
                 </div>
               )}
               <button
                 type="button"
                 onClick={handleClear}
-                className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 transition-colors"
+                className="nm-raised-sm absolute top-2 right-2 bg-background/90 hover:text-destructive text-muted-foreground rounded-xl p-1.5 transition-colors active:nm-inset"
               >
-                <RiCloseLine className="text-base" />
+                <RiCloseLine className="text-sm" />
               </button>
               {fileName && (
-                <div className="absolute bottom-0 left-0 right-0 bg-black/50 px-3 py-1.5">
+                <div className="absolute bottom-0 left-0 right-0 bg-black/40 backdrop-blur-sm px-3 py-1.5">
                   <span className="text-white text-xs truncate block">{fileName}</span>
                 </div>
               )}
@@ -123,11 +127,13 @@ export function MediaUploader({
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           onClick={() => inputRef.current?.click()}
-          className="flex flex-col items-center justify-center gap-3 h-40 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary hover:bg-accent/20 transition-colors"
+          className="nm-inset bg-background flex flex-col items-center justify-center gap-3 h-40 rounded-2xl cursor-pointer hover:brightness-[1.01] transition-all group"
         >
-          <RiUploadCloud2Line className="text-3xl text-muted-foreground" />
+          <div className="nm-raised-sm w-12 h-12 flex items-center justify-center rounded-2xl bg-background group-hover:text-primary text-muted-foreground transition-colors">
+            <RiUploadCloud2Line className="text-xl" />
+          </div>
           <div className="text-center">
-            <div className="text-sm font-medium text-foreground">{label}</div>
+            <div className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{label}</div>
             <div className="text-xs text-muted-foreground mt-0.5">
               {accept === "image" ? "PNG, JPG, GIF up to 10MB" : accept === "video" ? "MP4, MOV, WebM up to 10MB" : "Image or video, up to 10MB"}
             </div>
@@ -137,7 +143,7 @@ export function MediaUploader({
       )}
 
       {error && (
-        <p className="text-xs text-destructive mt-1">{error.message}</p>
+        <p className="text-xs text-destructive mt-1.5">{error.message}</p>
       )}
 
       <input
