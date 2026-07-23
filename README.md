@@ -20,6 +20,22 @@ Built as a **pnpm workspace monorepo**:
 > just Node.js and PostgreSQL — no Replit account required. (Replit support is
 > preserved, so it still works there too.)
 
+## Live demo (GitHub Pages)
+
+A **static, no-backend demo** is deployed to GitHub Pages:
+
+**https://nidss.github.io/demomediapner/**
+
+In this mode the API is served entirely in your browser from `localStorage`
+(seeded with sample content), so the full app — calendar, stats, and content
+CRUD — works without any server or database. Data stays local to your browser;
+file uploads are disabled in the demo.
+
+Deployment is automatic: the [`Deploy to GitHub Pages`](.github/workflows/deploy-pages.yml)
+workflow builds and publishes on every push to `main`. **One-time setup:** in
+the repo go to **Settings → Pages → Build and deployment** and set
+**Source = "GitHub Actions"**.
+
 ---
 
 ## Requirements
@@ -84,6 +100,7 @@ All configuration is via environment variables (see `.env.example`):
 | `PORT` | `8080` | Port used by the production server (`pnpm start`) |
 | `LOG_LEVEL` | `info` | API server log level |
 | `WEB_STATIC_DIR` | `artifacts/media-planner/dist/public` | Where the production server looks for built frontend assets |
+| `VITE_DEMO_MODE` | `false` | When `true`, the frontend serves `/api` from an in-browser `localStorage` backend (used for the static GitHub Pages demo) — no server/database needed |
 
 ## Production
 

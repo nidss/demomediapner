@@ -1,0 +1,79 @@
+name: Deploy to GitHub Pages
+
+# Builds the media-planner frontend in static "demo mode" (the API is served
+# in-browser from localStorage, so no backend/database is required) and
+# publishes it to GitHub Pages.
+#
+# One-time setup: in the repo, go to Settings → Pages → "Build and deployment"
+# and set Source = "GitHub Actions". After that every push to main redeploys.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; cancel in-progress runs on new pushes.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (static demo)
+        env:
+          NODE_ENV: production
+          # GitHub Pages serves the site under /<repo>/
+          BASE_PATH: /${{ github.event.repository.name }}/
+          VITE_DEMO_MODE: "true"
+        run: pnpm --filter @workspace/media-planner run build
+
+      - name: Prepare Pages artifact
+        run: |
+          dist="artifacts/media-planner/dist/public"
+          # SPA fallback so deep links (e.g. /create) work on Pages.
+          cp "$dist/index.html" "$dist/404.html"
+          # Disable Jekyll processing.
+          touch "$dist/.nojekyll"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: artifacts/media-planner/dist/public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
